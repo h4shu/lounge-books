@@ -1,59 +1,34 @@
-<script>
-	import Counter from './Counter.svelte';
-	import welcome from '$lib/images/svelte-welcome.webp';
-	import welcome_fallback from '$lib/images/svelte-welcome.png';
+<script lang="ts">
+	import type { Book } from '$lib/types/book';
+	import BookList from './BookList.svelte';
+
+	let books: Book[] = [
+		{
+			id: 1,
+			isbn: '978-4-7741-9230-3',
+			title: 'JavaScript: The Good Parts',
+			description:
+				'本書は、JavaScriptのエキスパートであるDouglas Crockfordが、JavaScriptの良い部分を紹介する。',
+			cover_link:
+				'https://images-na.ssl-images-amazon.com/images/I/51ZU4b8ZGTL._SX258_BO1,204,203,200_.jpg',
+			published_at: '2008-05-08',
+			author: 'Douglas Crockford',
+			publisher: 'オライリージャパン',
+			page_count: 176
+		}
+	];
 </script>
 
 <svelte:head>
-	<title>Home</title>
-	<meta name="description" content="Svelte demo app" />
+	<title>Lounge Books</title>
+	<meta name="description" content="CA Tech Loungeの蔵書管理アプリ" />
 </svelte:head>
 
 <section>
-	<h1>
-		<span class="welcome">
-			<picture>
-				<source srcset={welcome} type="image/webp" />
-				<img src={welcome_fallback} alt="Welcome" />
-			</picture>
-		</span>
-
-		to your new<br />SvelteKit app
-	</h1>
-
-	<h2>
-		try editing <strong>src/routes/+page.svelte</strong>
-	</h2>
-
-	<Counter />
+	<h1>Lounge Books</h1>
+	<input type="text" placeholder="検索" />
+	<BookList {books} />
 </section>
 
 <style>
-	section {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		flex: 0.6;
-	}
-
-	h1 {
-		width: 100%;
-	}
-
-	.welcome {
-		display: block;
-		position: relative;
-		width: 100%;
-		height: 0;
-		padding: 0 0 calc(100% * 495 / 2048) 0;
-	}
-
-	.welcome img {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		top: 0;
-		display: block;
-	}
 </style>
