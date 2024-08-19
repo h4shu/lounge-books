@@ -4,7 +4,7 @@ services:
     image: lounge-books-frontend
     volumes:
       - ./frontend:/app
-      - /node_modules
+      - front_node_modules:/app/node_modules
     ports:
       - 5173:5173
 
@@ -13,3 +13,6 @@ services:
     image: lounge-books-backend
     ports:
       - 8080:8080
+
+volumes:
+  front_node_modules:
