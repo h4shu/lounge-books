@@ -3,8 +3,8 @@ services:
     build: ./frontend
     image: lounge-books-frontend
     volumes:
-      - ./frontend/src:/app
-      - /src/node_modules
+      - ./frontend:/app
+      - /node_modules
     ports:
       - 5173:5173
 
