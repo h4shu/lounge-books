@@ -1,0 +1,15 @@
+services:
+  frontend:
+    build: ./frontend
+    image: lounge-books-frontend
+    volumes:
+      - ./frontend/src:/app
+      - /src/node_modules
+    ports:
+      - 5173:5173
+
+  backend:
+    build: ./backend
+    image: lounge-books-backend
+    ports:
+      - 8080:8080
