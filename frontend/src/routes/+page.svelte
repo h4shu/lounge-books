@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Book } from '$lib/types/book';
 	import BookList from './BookList.svelte';
+	import Search from './Search.svelte';
 
 	let books: Book[] = [
 		{
@@ -26,7 +27,7 @@
 
 <section>
 	<h1>Lounge Books</h1>
-	<input type="text" placeholder="検索" />
+	<Search />
 	<BookList {books} />
 </section>
 
