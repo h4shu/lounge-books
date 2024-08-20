@@ -2,16 +2,33 @@
 	import type { Book } from '$lib/types/book';
 
 	export let book: Book;
+
+	export let display_type: 'card' | 'table' = 'card';
 </script>
 
-<div class="book_card">
-	<h2>{book.title}</h2>
-	<p>{book.author}</p>
-	<p>{book.publisher}</p>
-	<p>{book.published_at}</p>
-	<p>{book.isbn}</p>
-	<p>{book.description}</p>
-</div>
+{#if display_type === 'card'}
+	<div class="book_card">
+		<img src={book.cover_link} alt={book.title} />
+	</div>
+{:else}
+	<tr>
+		<td>
+			{book.title}
+		</td>
+		<td>
+			{book.author}
+		</td>
+		<td>
+			{book.publisher}
+		</td>
+		<td>
+			{book.published_at}
+		</td>
+		<td>
+			{book.page_count}
+		</td>
+	</tr>
+{/if}
 
 <style>
 	.book_card {
@@ -19,10 +36,10 @@
 		border-radius: 4px;
 		padding: 8px;
 		margin: 8px;
+	}
 
-		h2 {
-			font-size: 1.5rem;
-			font-weight: 800;
-		}
+	td {
+		border-bottom: 1px solid #ccc;
+		padding: 8px;
 	}
 </style>

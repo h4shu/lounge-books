@@ -10,8 +10,7 @@
 			title: 'JavaScript: The Good Parts',
 			description:
 				'本書は、JavaScriptのエキスパートであるDouglas Crockfordが、JavaScriptの良い部分を紹介する。',
-			cover_link:
-				'https://images-na.ssl-images-amazon.com/images/I/51ZU4b8ZGTL._SX258_BO1,204,203,200_.jpg',
+			cover_link: 'https://cover.openbd.jp/9784780802047.jpg',
 			published_at: '2008-05-08',
 			author: 'Douglas Crockford',
 			publisher: 'オライリージャパン',
@@ -23,8 +22,7 @@
 			title: 'JavaScript: The Good Parts',
 			description:
 				'本書は、JavaScriptのエキスパートであるDouglas Crockfordが、JavaScriptの良い部分を紹介する。',
-			cover_link:
-				'https://images-na.ssl-images-amazon.com/images/I/51ZU4b8ZGTL._SX258_BO1,204,203,200_.jpg',
+			cover_link: 'https://cover.openbd.jp/9784780802047.jpg',
 			published_at: '2008-05-08',
 			author: 'Douglas Crockford',
 			publisher: 'オライリージャパン',
