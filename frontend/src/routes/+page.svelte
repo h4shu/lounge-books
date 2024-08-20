@@ -16,6 +16,19 @@
 			author: 'Douglas Crockford',
 			publisher: 'オライリージャパン',
 			page_count: 176
+		},
+		{
+			id: 2,
+			isbn: '978-4-7741-9230-3',
+			title: 'JavaScript: The Good Parts',
+			description:
+				'本書は、JavaScriptのエキスパートであるDouglas Crockfordが、JavaScriptの良い部分を紹介する。',
+			cover_link:
+				'https://images-na.ssl-images-amazon.com/images/I/51ZU4b8ZGTL._SX258_BO1,204,203,200_.jpg',
+			published_at: '2008-05-08',
+			author: 'Douglas Crockford',
+			publisher: 'オライリージャパン',
+			page_count: 176
 		}
 	];
 </script>
