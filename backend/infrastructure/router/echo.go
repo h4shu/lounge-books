@@ -43,7 +43,7 @@ func (e *echoEngine) setMiddlewares(router *echo.Echo) {
 
 func (e *echoEngine) setAppHandlers(router *echo.Echo) {
 	router.POST("/books", e.buildCreateBookHandler())
-
+	router.GET("/books", e.buildListBookHandler())
 }
 
 func (e *echoEngine) buildCreateBookHandler() echo.HandlerFunc {
@@ -55,6 +55,20 @@ func (e *echoEngine) buildCreateBookHandler() echo.HandlerFunc {
 		u := interactors.NewCreateBookInteractor(g, e.ctxTimeout)
 		p := presenters.NewCreateBookPresenter()
 		ctl := controllers.NewCreateBookController(u, p)
+		ctl.Handle(c.Response(), c.Request())
+		return nil
+	}
+}
+
+func (e *echoEngine) buildListBookHandler() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		g, err := gateways.NewBookPostgres(e.db)
+		if err != nil {
+			return err
+		}
+		u := interactors.NewListBookInteractor(g, e.ctxTimeout)
+		p := presenters.NewListBookPresenter()
+		ctl := controllers.NewListBookController(u, p)
 		ctl.Handle(c.Response(), c.Request())
 		return nil
 	}
