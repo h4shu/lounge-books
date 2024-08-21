@@ -1,3 +1,5 @@
 package inputs
 
-type ListBookInput struct{}
+type ListBookInput struct {
+	SearchTitle string
+}

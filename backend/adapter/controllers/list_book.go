@@ -28,7 +28,9 @@ func NewListBookController(u usecases.ListBookUsecase, p presenters.ListBookPres
 }
 
 func (c *listBookControllerImpl) Handle(w http.ResponseWriter, r *http.Request) {
-	i := &inputs.ListBookInput{}
+	i := &inputs.ListBookInput{
+		SearchTitle: r.URL.Query().Get("q"),
+	}
 	o, err := c.usecase.Execute(r.Context(), i)
 	if err != nil {
 		log.Println(err)

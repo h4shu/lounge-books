@@ -110,6 +110,10 @@ func (ps postgresStmt) ExecContext(ctx context.Context, args ...any) error {
 	return err
 }
 
+func (ps postgresStmt) QueryContext(ctx context.Context, args ...any) (repositories.Rows, error) {
+	return ps.stmt.QueryContext(ctx, args...)
+}
+
 func (ps postgresStmt) QueryRowContext(ctx context.Context, args ...any) repositories.Row {
 	return ps.stmt.QueryRowContext(ctx, args...)
 }

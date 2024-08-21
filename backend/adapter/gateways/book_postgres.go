@@ -125,3 +125,54 @@ func (p *BookPostgres) FindByID(ctx context.Context, bookId *valueobjects.BookID
 	}
 	return entities.NewBook(valueobjects.NewBookID(id), valueobjects.NewISBN(isbn), title, description, coverLink, publishedAtVal, valueobjects.NewAuthor(author), publisher, pageCount, deletedAtVal), nil
 }
+
+func (p *BookPostgres) FindByTitleContaining(ctx context.Context, bookTitle string) ([]entities.Book, error) {
+	query := "SELECT id, isbn, title, description, cover_link, published_at, author, publisher, page_count, deleted_at FROM books WHERE title LIKE '%' || $1 || '%'"
+	stmt, err := p.db.PrepareContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+
+	rows, err := stmt.QueryContext(ctx, bookTitle)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var books []entities.Book
+	for rows.Next() {
+		var (
+			id          int
+			isbn        string
+			title       string
+			description string
+			coverLink   string
+			publishedAt sql.NullTime
+			author      string
+			publisher   string
+			pageCount   int
+			deletedAt   sql.NullTime
+		)
+		err := rows.Scan(&id, &isbn, &title, &description, &coverLink, &publishedAt, &author, &publisher, &pageCount, &deletedAt)
+		if err != nil {
+			return nil, err
+		}
+
+		var publishedAtVal *valueobjects.PublishedAt
+		if publishedAt.Valid {
+			publishedAtVal = valueobjects.NewPublishedAt(&publishedAt.Time)
+		} else {
+			publishedAtVal = valueobjects.NewPublishedAt(nil)
+		}
+		var deletedAtVal *valueobjects.DeletedAt
+		if deletedAt.Valid {
+			deletedAtVal = valueobjects.NewDeletedAt(&publishedAt.Time)
+		} else {
+			deletedAtVal = valueobjects.NewDeletedAt(nil)
+		}
+		book := entities.NewBook(valueobjects.NewBookID(id), valueobjects.NewISBN(isbn), title, description, coverLink, publishedAtVal, valueobjects.NewAuthor(author), publisher, pageCount, deletedAtVal)
+		books = append(books, *book)
+	}
+	return books, nil
+}

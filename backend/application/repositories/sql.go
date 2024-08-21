@@ -23,6 +23,7 @@ type Row interface {
 
 type Stmt interface {
 	ExecContext(ctx context.Context, args ...any) error
+	QueryContext(ctx context.Context, args ...any) (Rows, error)
 	QueryRowContext(ctx context.Context, args ...any) Row
 	Close() error
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/h4shu/lounge-books/application/outputs"
 	"github.com/h4shu/lounge-books/application/repositories"
 	"github.com/h4shu/lounge-books/application/usecases"
+	"github.com/h4shu/lounge-books/domain/entities"
 )
 
 type ListBookInteractor struct {
@@ -26,7 +27,13 @@ func (i *ListBookInteractor) Execute(ctx context.Context, input *inputs.ListBook
 	ctx, cancel := context.WithTimeout(ctx, i.ctxTimeout)
 	defer cancel()
 
-	books, err := i.repository.FindAll(ctx)
+	var books []entities.Book
+	var err error
+	if len(input.SearchTitle) == 0 {
+		books, err = i.repository.FindAll(ctx)
+	} else {
+		books, err = i.repository.FindByTitleContaining(ctx, input.SearchTitle)
+	}
 	if err != nil {
 		return nil, err
 	}
