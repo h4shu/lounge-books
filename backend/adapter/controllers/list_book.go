@@ -39,6 +39,6 @@ func (c *listBookControllerImpl) Handle(w http.ResponseWriter, r *http.Request) 
 	err = json.NewEncoder(w).Encode(res)
 	if err != nil {
 		log.Println(err)
-		w.WriteHeader(http.StatusServiceUnavailable)
+		w.WriteHeader(http.StatusInternalServerError)
 	}
 }
