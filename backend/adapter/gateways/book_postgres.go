@@ -84,7 +84,7 @@ func (p *BookPostgres) FindAll(ctx context.Context) ([]entities.Book, error) {
 	return books, nil
 }
 
-func (p *BookPostgres) FindByID(ctx context.Context, bookId valueobjects.BookID) (*entities.Book, error) {
+func (p *BookPostgres) FindByID(ctx context.Context, bookId *valueobjects.BookID) (*entities.Book, error) {
 	query := "SELECT id, isbn, title, description, cover_link, published_at, author, publisher, page_count, deleted_at FROM books WHERE id = $1"
 	stmt, err := p.db.PrepareContext(ctx, query)
 	if err != nil {
@@ -104,7 +104,7 @@ func (p *BookPostgres) FindByID(ctx context.Context, bookId valueobjects.BookID)
 		pageCount   int
 		deletedAt   sql.NullTime
 	)
-	err = stmt.QueryRowContext(ctx, bookId).Scan(&id, &isbn, &title, &description, &coverLink, &publishedAt, &author, &publisher, &pageCount, &deletedAt)
+	err = stmt.QueryRowContext(ctx, bookId.Int()).Scan(&id, &isbn, &title, &description, &coverLink, &publishedAt, &author, &publisher, &pageCount, &deletedAt)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	} else if err != nil {
