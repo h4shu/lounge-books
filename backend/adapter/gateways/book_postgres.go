@@ -55,24 +55,28 @@ func (p *BookPostgres) FindAll(ctx context.Context) ([]entities.Book, error) {
 			title       string
 			description string
 			coverLink   string
-			publishedAt string
+			publishedAt sql.NullTime
 			author      string
 			publisher   string
 			pageCount   int
-			deletedAt   string
+			deletedAt   sql.NullTime
 		)
 		err := rows.Scan(&id, &isbn, &title, &description, &coverLink, &publishedAt, &author, &publisher, &pageCount, &deletedAt)
 		if err != nil {
 			return nil, err
 		}
 
-		publishedAtVal, err := valueobjects.NewPublishedAt(publishedAt)
-		if err != nil {
-			return nil, err
+		var publishedAtVal *valueobjects.PublishedAt
+		if publishedAt.Valid {
+			publishedAtVal = valueobjects.NewPublishedAt(&publishedAt.Time)
+		} else {
+			publishedAtVal = valueobjects.NewPublishedAt(nil)
 		}
-		deletedAtVal, err := valueobjects.NewDeletedAt(deletedAt)
-		if err != nil {
-			return nil, err
+		var deletedAtVal *valueobjects.DeletedAt
+		if deletedAt.Valid {
+			deletedAtVal = valueobjects.NewDeletedAt(&publishedAt.Time)
+		} else {
+			deletedAtVal = valueobjects.NewDeletedAt(nil)
 		}
 		book := entities.NewBook(valueobjects.NewBookID(id), valueobjects.NewISBN(isbn), title, description, coverLink, publishedAtVal, valueobjects.NewAuthor(author), publisher, pageCount, deletedAtVal)
 		books = append(books, *book)
@@ -94,11 +98,11 @@ func (p *BookPostgres) FindByID(ctx context.Context, bookId valueobjects.BookID)
 		title       string
 		description string
 		coverLink   string
-		publishedAt string
+		publishedAt sql.NullTime
 		author      string
 		publisher   string
 		pageCount   int
-		deletedAt   string
+		deletedAt   sql.NullTime
 	)
 	err = stmt.QueryRowContext(ctx, bookId).Scan(&id, &isbn, &title, &description, &coverLink, &publishedAt, &author, &publisher, &pageCount, &deletedAt)
 	if err == sql.ErrNoRows {
@@ -107,13 +111,17 @@ func (p *BookPostgres) FindByID(ctx context.Context, bookId valueobjects.BookID)
 		return nil, err
 	}
 
-	publishedAtVal, err := valueobjects.NewPublishedAt(publishedAt)
-	if err != nil {
-		return nil, err
+	var publishedAtVal *valueobjects.PublishedAt
+	if publishedAt.Valid {
+		publishedAtVal = valueobjects.NewPublishedAt(&publishedAt.Time)
+	} else {
+		publishedAtVal = valueobjects.NewPublishedAt(nil)
 	}
-	deletedAtVal, err := valueobjects.NewDeletedAt(deletedAt)
-	if err != nil {
-		return nil, err
+	var deletedAtVal *valueobjects.DeletedAt
+	if deletedAt.Valid {
+		deletedAtVal = valueobjects.NewDeletedAt(&publishedAt.Time)
+	} else {
+		deletedAtVal = valueobjects.NewDeletedAt(nil)
 	}
 	return entities.NewBook(valueobjects.NewBookID(id), valueobjects.NewISBN(isbn), title, description, coverLink, publishedAtVal, valueobjects.NewAuthor(author), publisher, pageCount, deletedAtVal), nil
 }

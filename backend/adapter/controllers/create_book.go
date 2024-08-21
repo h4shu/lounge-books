@@ -46,7 +46,7 @@ func (c *createBookControllerImpl) Handle(w http.ResponseWriter, r *http.Request
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	publishedAt, err := valueobjects.NewPublishedAt(req.PublishedAt)
+	publishedAt, err := valueobjects.NewPublishedAtFromStr(req.PublishedAt)
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)

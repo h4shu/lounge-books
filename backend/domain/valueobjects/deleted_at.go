@@ -6,7 +6,11 @@ type DeletedAt struct {
 	t *time.Time
 }
 
-func NewDeletedAt(s string) (*DeletedAt, error) {
+func NewDeletedAt(t *time.Time) *DeletedAt {
+	return &DeletedAt{t}
+}
+
+func NewDeletedAtFromStr(s string) (*DeletedAt, error) {
 	if s == "" {
 		return &DeletedAt{nil}, nil
 	}

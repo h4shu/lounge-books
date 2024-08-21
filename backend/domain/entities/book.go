@@ -80,3 +80,7 @@ func (b *Book) Publisher() string {
 func (b *Book) PageCount() int {
 	return b.pageCount
 }
+
+func (b *Book) DeletedAt() *valueobjects.DeletedAt {
+	return b.deletedAt
+}
