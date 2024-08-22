@@ -9,6 +9,7 @@ type config struct {
 	user     string
 	password string
 	database string
+	sslmode  string
 }
 
 func newConfigPostgres() *config {
@@ -19,5 +20,6 @@ func newConfigPostgres() *config {
 		user:     os.Getenv("POSTGRES_USER"),
 		password: os.Getenv("POSTGRES_PASSWORD"),
 		database: os.Getenv("POSTGRES_DB"),
+		sslmode:  os.Getenv("POSTGRES_SSLMODE"),
 	}
 }

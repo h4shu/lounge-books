@@ -14,12 +14,13 @@ type postgresHandler struct {
 
 func newPostgresHandler(c *config) (*postgresHandler, error) {
 	ds := fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
 		c.host,
 		c.port,
 		c.user,
 		c.password,
 		c.database,
+		c.sslmode,
 	)
 	db, err := sql.Open(c.driver, ds)
 	if err != nil {
