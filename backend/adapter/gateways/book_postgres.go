@@ -29,18 +29,18 @@ func NewBookPostgres(db repositories.SQL) (repositories.BookRepository, error) {
 }
 
 func (p *BookPostgres) Create(ctx context.Context, book *entities.Book) error {
-	query := "INSERT INTO books(isbn, title, description, cover_link, published_at, author, publisher, page_count) VALUES($1, $2, $3, $4, $5, $6, $7, $8)"
+	query := "INSERT INTO books(isbn, title, description, cover_link, published_year, published_month, published_day, author, publisher, page_count) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)"
 	stmt, err := p.db.PrepareContext(ctx, query)
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
 
-	return stmt.ExecContext(ctx, book.ISBN().String(), book.Title(), book.Description(), book.CoverLink(), book.PublishedAt().Time(), book.Author().String(), book.Publisher(), book.PageCount())
+	return stmt.ExecContext(ctx, book.ISBN().String(), book.Title(), book.Description(), book.CoverLink(), book.PublishedAt().Year().Int(), book.PublishedAt().Month().Int(), book.PublishedAt().Day().Int(), book.Author().String(), book.Publisher(), book.PageCount())
 }
 
 func (p *BookPostgres) FindAll(ctx context.Context) ([]entities.Book, error) {
-	query := "SELECT id, isbn, title, description, cover_link, published_at, author, publisher, page_count, deleted_at FROM books"
+	query := "SELECT id, isbn, title, description, cover_link, published_year, published_month, published_day, author, publisher, page_count, deleted_at FROM books"
 	rows, err := p.db.QueryContext(ctx, query)
 	if err != nil {
 		return nil, err
@@ -50,42 +50,44 @@ func (p *BookPostgres) FindAll(ctx context.Context) ([]entities.Book, error) {
 	var books []entities.Book
 	for rows.Next() {
 		var (
-			id          int
-			isbn        string
-			title       string
-			description string
-			coverLink   string
-			publishedAt sql.NullTime
-			author      string
-			publisher   string
-			pageCount   int
-			deletedAt   sql.NullTime
+			id             int
+			isbn           string
+			title          string
+			description    string
+			coverLink      string
+			publishedYear  int
+			publishedMonth int
+			publishedDay   int
+			author         string
+			publisher      string
+			pageCount      int
+			deletedAt      sql.NullTime
 		)
-		err := rows.Scan(&id, &isbn, &title, &description, &coverLink, &publishedAt, &author, &publisher, &pageCount, &deletedAt)
+		err := rows.Scan(&id, &isbn, &title, &description, &coverLink, &publishedYear, &publishedMonth, &publishedDay, &author, &publisher, &pageCount, &deletedAt)
 		if err != nil {
 			return nil, err
 		}
 
-		var publishedAtVal *valueobjects.PublishedAt
-		if publishedAt.Valid {
-			publishedAtVal = valueobjects.NewPublishedAt(&publishedAt.Time)
-		} else {
-			publishedAtVal = valueobjects.NewPublishedAt(nil)
+		publishedAt, err := valueobjects.NewPublishedAt(publishedYear, publishedMonth, publishedDay)
+		if err != nil {
+			return nil, err
 		}
+
 		var deletedAtVal *valueobjects.DeletedAt
 		if deletedAt.Valid {
-			deletedAtVal = valueobjects.NewDeletedAt(&publishedAt.Time)
+			deletedAtVal = valueobjects.NewDeletedAt(&deletedAt.Time)
 		} else {
 			deletedAtVal = valueobjects.NewDeletedAt(nil)
 		}
-		book := entities.NewBook(valueobjects.NewBookID(id), valueobjects.NewISBN(isbn), title, description, coverLink, publishedAtVal, valueobjects.NewAuthor(author), publisher, pageCount, deletedAtVal)
+
+		book := entities.NewBook(valueobjects.NewBookID(id), valueobjects.NewISBN(isbn), title, description, coverLink, publishedAt, valueobjects.NewAuthor(author), publisher, pageCount, deletedAtVal)
 		books = append(books, *book)
 	}
 	return books, nil
 }
 
 func (p *BookPostgres) FindByID(ctx context.Context, bookId *valueobjects.BookID) (*entities.Book, error) {
-	query := "SELECT id, isbn, title, description, cover_link, published_at, author, publisher, page_count, deleted_at FROM books WHERE id = $1"
+	query := "SELECT id, isbn, title, description, cover_link, published_year, published_month, published_day, author, publisher, page_count, deleted_at FROM books WHERE id = $1"
 	stmt, err := p.db.PrepareContext(ctx, query)
 	if err != nil {
 		return nil, err
@@ -93,41 +95,43 @@ func (p *BookPostgres) FindByID(ctx context.Context, bookId *valueobjects.BookID
 	defer stmt.Close()
 
 	var (
-		id          int
-		isbn        string
-		title       string
-		description string
-		coverLink   string
-		publishedAt sql.NullTime
-		author      string
-		publisher   string
-		pageCount   int
-		deletedAt   sql.NullTime
+		id             int
+		isbn           string
+		title          string
+		description    string
+		coverLink      string
+		publishedYear  int
+		publishedMonth int
+		publishedDay   int
+		author         string
+		publisher      string
+		pageCount      int
+		deletedAt      sql.NullTime
 	)
-	err = stmt.QueryRowContext(ctx, bookId.Int()).Scan(&id, &isbn, &title, &description, &coverLink, &publishedAt, &author, &publisher, &pageCount, &deletedAt)
+	err = stmt.QueryRowContext(ctx, bookId.Int()).Scan(&id, &isbn, &title, &description, &coverLink, &publishedYear, &publishedMonth, &publishedDay, &author, &publisher, &pageCount, &deletedAt)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	} else if err != nil {
 		return nil, err
 	}
 
-	var publishedAtVal *valueobjects.PublishedAt
-	if publishedAt.Valid {
-		publishedAtVal = valueobjects.NewPublishedAt(&publishedAt.Time)
-	} else {
-		publishedAtVal = valueobjects.NewPublishedAt(nil)
+	publishedAt, err := valueobjects.NewPublishedAt(publishedYear, publishedMonth, publishedDay)
+	if err != nil {
+		return nil, err
 	}
+
 	var deletedAtVal *valueobjects.DeletedAt
 	if deletedAt.Valid {
-		deletedAtVal = valueobjects.NewDeletedAt(&publishedAt.Time)
+		deletedAtVal = valueobjects.NewDeletedAt(&deletedAt.Time)
 	} else {
 		deletedAtVal = valueobjects.NewDeletedAt(nil)
 	}
-	return entities.NewBook(valueobjects.NewBookID(id), valueobjects.NewISBN(isbn), title, description, coverLink, publishedAtVal, valueobjects.NewAuthor(author), publisher, pageCount, deletedAtVal), nil
+
+	return entities.NewBook(valueobjects.NewBookID(id), valueobjects.NewISBN(isbn), title, description, coverLink, publishedAt, valueobjects.NewAuthor(author), publisher, pageCount, deletedAtVal), nil
 }
 
 func (p *BookPostgres) FindByTitleContaining(ctx context.Context, bookTitle string) ([]entities.Book, error) {
-	query := "SELECT id, isbn, title, description, cover_link, published_at, author, publisher, page_count, deleted_at FROM books WHERE title LIKE '%' || $1 || '%'"
+	query := "SELECT id, isbn, title, description, cover_link, published_year, published_month, published_day, author, publisher, page_count, deleted_at FROM books WHERE title LIKE '%' || $1 || '%'"
 	stmt, err := p.db.PrepareContext(ctx, query)
 	if err != nil {
 		return nil, err
@@ -143,35 +147,37 @@ func (p *BookPostgres) FindByTitleContaining(ctx context.Context, bookTitle stri
 	var books []entities.Book
 	for rows.Next() {
 		var (
-			id          int
-			isbn        string
-			title       string
-			description string
-			coverLink   string
-			publishedAt sql.NullTime
-			author      string
-			publisher   string
-			pageCount   int
-			deletedAt   sql.NullTime
+			id             int
+			isbn           string
+			title          string
+			description    string
+			coverLink      string
+			publishedYear  int
+			publishedMonth int
+			publishedDay   int
+			author         string
+			publisher      string
+			pageCount      int
+			deletedAt      sql.NullTime
 		)
-		err := rows.Scan(&id, &isbn, &title, &description, &coverLink, &publishedAt, &author, &publisher, &pageCount, &deletedAt)
+		err := rows.Scan(&id, &isbn, &title, &description, &coverLink, &publishedYear, &publishedMonth, &publishedDay, &author, &publisher, &pageCount, &deletedAt)
 		if err != nil {
 			return nil, err
 		}
 
-		var publishedAtVal *valueobjects.PublishedAt
-		if publishedAt.Valid {
-			publishedAtVal = valueobjects.NewPublishedAt(&publishedAt.Time)
-		} else {
-			publishedAtVal = valueobjects.NewPublishedAt(nil)
+		publishedAt, err := valueobjects.NewPublishedAt(publishedYear, publishedMonth, publishedDay)
+		if err != nil {
+			return nil, err
 		}
+
 		var deletedAtVal *valueobjects.DeletedAt
 		if deletedAt.Valid {
-			deletedAtVal = valueobjects.NewDeletedAt(&publishedAt.Time)
+			deletedAtVal = valueobjects.NewDeletedAt(&deletedAt.Time)
 		} else {
 			deletedAtVal = valueobjects.NewDeletedAt(nil)
 		}
-		book := entities.NewBook(valueobjects.NewBookID(id), valueobjects.NewISBN(isbn), title, description, coverLink, publishedAtVal, valueobjects.NewAuthor(author), publisher, pageCount, deletedAtVal)
+
+		book := entities.NewBook(valueobjects.NewBookID(id), valueobjects.NewISBN(isbn), title, description, coverLink, publishedAt, valueobjects.NewAuthor(author), publisher, pageCount, deletedAtVal)
 		books = append(books, *book)
 	}
 	return books, nil

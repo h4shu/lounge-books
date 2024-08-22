@@ -20,14 +20,16 @@ type (
 		presenter presenters.CreateBookPresenter
 	}
 	createBookRequest struct {
-		ISBN        string `json:"isbn"`
-		Title       string `json:"title"`
-		Description string `json:"description"`
-		CoverLink   string `json:"cover_link"`
-		PublishedAt string `json:"published_at"`
-		Author      string `json:"author"`
-		Publisher   string `json:"publisher"`
-		PageCount   int    `json:"page_count"`
+		ISBN           string `json:"isbn"`
+		Title          string `json:"title"`
+		Description    string `json:"description"`
+		CoverLink      string `json:"cover_link"`
+		PublishedYear  int    `json:"published_year"`
+		PublishedMonth int    `json:"published_month"`
+		PublishedDay   int    `json:"published_day"`
+		Author         string `json:"author"`
+		Publisher      string `json:"publisher"`
+		PageCount      int    `json:"page_count"`
 	}
 )
 
@@ -46,12 +48,14 @@ func (c *createBookControllerImpl) Handle(w http.ResponseWriter, r *http.Request
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	publishedAt, err := valueobjects.NewPublishedAtFromStr(req.PublishedAt)
+
+	publishedAt, err := valueobjects.NewPublishedAt(req.PublishedYear, req.PublishedMonth, req.PublishedDay)
 	if err != nil {
 		log.Println(err)
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
 	i := &inputs.CreateBookInput{
 		ISBN:        valueobjects.NewISBN(req.ISBN),
 		Title:       req.Title,

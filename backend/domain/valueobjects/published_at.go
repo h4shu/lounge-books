@@ -1,33 +1,45 @@
 package valueobjects
 
-import "time"
+import "fmt"
 
 type PublishedAt struct {
-	t *time.Time
+	year  *Year
+	month *Month
+	day   *Day
 }
 
-func NewPublishedAt(t *time.Time) *PublishedAt {
-	return &PublishedAt{t}
-}
-
-func NewPublishedAtFromStr(s string) (*PublishedAt, error) {
-	if s == "" {
-		return &PublishedAt{nil}, nil
-	}
-	t, err := time.Parse(time.DateOnly, s)
+func NewPublishedAt(year int, month int, day int) (*PublishedAt, error) {
+	y, err := NewYear(year)
 	if err != nil {
-		return &PublishedAt{nil}, err
+		return nil, err
 	}
-	return &PublishedAt{&t}, nil
+	m, err := NewMonth(month)
+	if err != nil {
+		return nil, err
+	}
+	d, err := NewDay(day)
+	if err != nil {
+		return nil, err
+	}
+	return &PublishedAt{
+		year:  y,
+		month: m,
+		day:   d,
+	}, nil
 }
 
-func (p *PublishedAt) Time() *time.Time {
-	return p.t
+func (p *PublishedAt) Year() *Year {
+	return p.year
+}
+
+func (p *PublishedAt) Month() *Month {
+	return p.month
+}
+
+func (p *PublishedAt) Day() *Day {
+	return p.day
 }
 
 func (p *PublishedAt) String() string {
-	if p.t == nil {
-		return ""
-	}
-	return time.Time(*p.t).Format(time.DateOnly)
+	return fmt.Sprintf("%04d-%02d-%02d", p.year.Int(), p.month.Int(), p.day.Int())
 }
