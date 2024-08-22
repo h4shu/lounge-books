@@ -1,20 +1,9 @@
 <script lang="ts">
+	import { parseNumber } from '$lib/utils';
 	/** @type {import('./$types').PageData} */
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-
-	const parseNumber = (str: string | undefined) => {
-		if (!str) {
-			return null;
-		}
-		const x = Number(str);
-		if (isNaN(x)) {
-			return null;
-		} else {
-			return x;
-		}
-	};
 </script>
 
 <div>
