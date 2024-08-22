@@ -1,4 +1,5 @@
 import type { RegisterBookRequest } from '$lib/types/api.js';
+import { fail } from '@sveltejs/kit';
 
 /** @type {import('./$types').Actions} */
 export const actions = {
@@ -11,7 +12,9 @@ export const actions = {
 			author: data.get('author')?.toString() || '',
 			cover_link: data.get('cover_link')?.toString() || '',
 			publisher: data.get('publisher')?.toString() || '',
-			published_at: data.get('published_at')?.toString() || '',
+			published_year: data.get('published_year') as number | null,
+			published_month: data.get('published_month') as number | null,
+			published_day: data.get('published_day') as number | null,
 			page_count: parseInt(data.get('page_count')?.toString() || '0', 10)
 		};
 
@@ -23,9 +26,13 @@ export const actions = {
 		console.log(res);
 
 		if (res.status === 204) {
-			return 'success';
+			return {
+				status: 'success'
+			};
 		} else {
-			return 'error';
+			return fail(400, {
+				status: 'error'
+			});
 		}
 	}
 };

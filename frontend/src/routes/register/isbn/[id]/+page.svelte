@@ -1,9 +1,20 @@
 <script lang="ts">
 	/** @type {import('./$types').PageData} */
-	import type { PageData, ActionData } from './$types';
+	import type { PageData } from './$types';
 
 	export let data: PageData;
-	export let form: ActionData;
+
+	const parseNumber = (str: string | undefined) => {
+		if (!str) {
+			return null;
+		}
+		const x = Number(str);
+		if (isNaN(x)) {
+			return null;
+		} else {
+			return x;
+		}
+	};
 </script>
 
 <div>
@@ -37,7 +48,21 @@
 			<fieldset>
 				<legend>出版日</legend>
 				<div>
-					<input name="published_at" type="date" value={data.book_info?.published_at} />
+					<input
+						name="published_year"
+						type="number"
+						value={parseNumber(data.book_info?.published_at.slice(0, 4))}
+					/>
+					<input
+						name="published_month"
+						type="number"
+						value={parseNumber(data.book_info?.published_at.slice(4, 6))}
+					/>
+					<input
+						name="published_day"
+						type="number"
+						value={parseNumber(data.book_info?.published_at.slice(6, 8))}
+					/>
 				</div>
 			</fieldset>
 			<fieldset>

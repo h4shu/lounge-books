@@ -15,8 +15,8 @@
 		const debouncedScan = async () => {
 			console.log('Scanning...');
 			controls = await codeReader.decodeFromVideoDevice(undefined, videoRef, (result, error) => {
-				if (result) {
-					goto(`/register/${result.getText()}`);
+				if (result && result.getText().startsWith('97')) {
+					goto(`/register/isbn/${result.getText()}`);
 				}
 			});
 		};

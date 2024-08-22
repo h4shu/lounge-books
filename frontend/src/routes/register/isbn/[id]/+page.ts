@@ -6,19 +6,19 @@ export async function load({ params }) {
 	const data: OpenBDResponse = await res.json();
 
 	if (data[0]) {
+		const book = data[0];
+
 		return {
 			status: 'success',
 			book_info: {
-				isbn: data[0].onix.ProductIdentifier.IDValue,
-				title: data[0].onix.DescriptiveDetail.TitleDetail.TitleElement.TitleText.content,
-				description: data[0].onix.CollateralDetail.TextContent[0].Text,
-				cover_link: `https://cover.openbd.jp/${data[0].onix.ProductIdentifier.IDValue}.jpg`,
-				published_at: data[0].onix.PublishingDetail.PublishingDate[0].Date,
-				author: data[0].onix.DescriptiveDetail.Contributor.map(
-					(contributor) => contributor.PersonName.content
-				).join(', '),
-				publisher: data[0].onix.PublishingDetail.Publisher.PublisherName,
-				page_count: data[0].onix.DescriptiveDetail.Extent[0].ExtentValue
+				isbn: book.summary.isbn,
+				title: book.summary.title,
+				description: book.onix.CollateralDetail?.TextContent?.[0]?.Text,
+				cover_link: `https://cover.openbd.jp/${book.onix.ProductIdentifier?.IDValue}.jpg`,
+				published_at: book.summary.pubdate,
+				author: book.summary.author,
+				publisher: book.summary.publisher,
+				page_count: book.onix.DescriptiveDetail?.Extent?.[0]?.ExtentValue
 			}
 		};
 	} else {
