@@ -11,8 +11,8 @@
 			<li aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
 				<a href="/">ホーム</a>
 			</li>
-			<li aria-current={$page.url.pathname.startsWith('/add') ? 'page' : undefined}>
-				<a href="/add">新規登録</a>
+			<li aria-current={$page.url.pathname.startsWith('/register') ? 'page' : undefined}>
+				<a href="/register">新規登録</a>
 			</li>
 		</ul>
 		<svg viewBox="0 0 2 3" aria-hidden="true">
