@@ -14,7 +14,7 @@ func main() {
 		ContextTimeout(10 * time.Second).
 		DbSQL(database.InstancePostgres)
 
-	app.WebServerPort(os.Getenv("APP_PORT")).
+	app.WebServerPort(os.Getenv("PORT")).
 		WebServer(router.InstanceEcho).
 		Start()
 }

@@ -8,5 +8,5 @@ RUN go build -o server .
 FROM golang:1.22.6
 COPY --from=builder /app/server /app/server
 WORKDIR /app
-EXPOSE 8080
+EXPOSE ${PORT}
 CMD ["/app/server"]

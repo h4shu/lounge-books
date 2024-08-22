@@ -12,7 +12,7 @@ services:
     build: ./backend
     image: lounge-books-backend
     environment:
-      - APP_PORT=8080
+      - PORT=${BACKEND_PORT}
       - POSTGRES_DRIVER=postgres
       - POSTGRES_HOST
       - POSTGRES_PORT
@@ -21,7 +21,7 @@ services:
       - POSTGRES_DB
       - POSTGRES_SSLMODE
     ports:
-      - 8080:8080
+      - ${BACKEND_PORT}:${BACKEND_PORT}
 
   postgres:
     image: postgres:latest
