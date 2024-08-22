@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import { BrowserMultiFormatReader, type IScannerControls } from '@zxing/browser';
+	import { goto } from '$app/navigation';
 
 	let showScanner = false;
 	let videoRef: HTMLVideoElement;
@@ -14,7 +15,9 @@
 		const debouncedScan = async () => {
 			console.log('Scanning...');
 			controls = await codeReader.decodeFromVideoDevice(undefined, videoRef, (result, error) => {
-				console.log(result);
+				if (result) {
+					goto(`/register/${result.getText()}`);
+				}
 			});
 		};
 

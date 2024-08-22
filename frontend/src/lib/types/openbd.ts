@@ -1,4 +1,4 @@
-export type Root = Root2[];
+export type OpenBDResponse = Root2[] | null[];
 
 export interface Root2 {
 	onix: Onix;
