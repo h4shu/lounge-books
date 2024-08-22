@@ -8,7 +8,7 @@ type (
 	}
 	getBookPresenterImpl struct{}
 	getBookResponse      struct {
-		ID          int    `json:"id,string"`
+		ID          int    `json:"id"`
 		ISBN        string `json:"isbn"`
 		Title       string `json:"title"`
 		Description string `json:"description"`
@@ -16,7 +16,7 @@ type (
 		PublishedAt string `json:"published_at"`
 		Author      string `json:"author"`
 		Publisher   string `json:"publisher"`
-		PageCount   int    `json:"page_count,string"`
+		PageCount   int    `json:"page_count"`
 		DeletedAt   string `json:"deleted_at"`
 	}
 )

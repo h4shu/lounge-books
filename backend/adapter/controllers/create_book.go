@@ -27,7 +27,7 @@ type (
 		PublishedAt string `json:"published_at"`
 		Author      string `json:"author"`
 		Publisher   string `json:"publisher"`
-		PageCount   int    `json:"page_count,string"`
+		PageCount   int    `json:"page_count"`
 	}
 )
 
