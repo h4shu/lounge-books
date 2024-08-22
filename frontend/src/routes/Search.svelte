@@ -2,7 +2,10 @@
 </script>
 
 <div>
-	<input type="text" placeholder="検索" />
+	<form method="post">
+		<input name="query" type="text" placeholder="検索" />
+		<button type="submit">検索</button>
+	</form>
 </div>
 
 <style>

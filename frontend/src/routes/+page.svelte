@@ -1,34 +1,16 @@
 <script lang="ts">
-	import type { Book } from '$lib/types/book';
+	import type { ActionData, PageData } from './$types';
 	import BookList from './BookList.svelte';
 	import Search from './Search.svelte';
 
-	let books: Book[] = [
-		{
-			id: 1,
-			isbn: '978-4-7741-9230-3',
-			title: 'JavaScript: The Good Parts',
-			description:
-				'本書は、JavaScriptのエキスパートであるDouglas Crockfordが、JavaScriptの良い部分を紹介する。',
-			cover_link: 'https://cover.openbd.jp/9784780802047.jpg',
-			published_at: '2008-05-08',
-			author: 'Douglas Crockford',
-			publisher: 'オライリージャパン',
-			page_count: 176
-		},
-		{
-			id: 2,
-			isbn: '978-4-7741-9230-3',
-			title: 'JavaScript: The Good Parts',
-			description:
-				'本書は、JavaScriptのエキスパートであるDouglas Crockfordが、JavaScriptの良い部分を紹介する。',
-			cover_link: 'https://cover.openbd.jp/9784780802047.jpg',
-			published_at: '2008-05-08',
-			author: 'Douglas Crockford',
-			publisher: 'オライリージャパン',
-			page_count: 176
+	export let data: PageData;
+	export let form: ActionData;
+
+	$: {
+		if (form && form.status === 'success') {
+			data = form;
 		}
-	];
+	}
 </script>
 
 <svelte:head>
@@ -39,7 +21,9 @@
 <section>
 	<h1>Lounge Books</h1>
 	<Search />
-	<BookList {books} />
+	{#if data.status === 'success' && data.books}
+		<BookList books={data.books} />
+	{/if}
 </section>
 
 <style>
