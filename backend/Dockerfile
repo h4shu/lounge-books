@@ -1,12 +1,12 @@
-FROM golang:1.22.5 AS builder
-COPY ./src /app
+FROM golang:1.22.6 AS builder
+COPY . /app
 WORKDIR /app
 RUN go mod download
 RUN go mod verify
 RUN go build -o server .
 
-FROM golang:1.22.5
+FROM golang:1.22.6
 COPY --from=builder /app/server /app/server
 WORKDIR /app
-EXPOSE 8080
+EXPOSE ${PORT}
 CMD ["/app/server"]

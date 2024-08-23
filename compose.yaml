@@ -11,8 +11,27 @@ services:
   backend:
     build: ./backend
     image: lounge-books-backend
+    environment:
+      - PORT=${BACKEND_PORT}
+      - POSTGRES_DRIVER=postgres
+      - POSTGRES_HOST
+      - POSTGRES_PORT
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+      - POSTGRES_SSLMODE
     ports:
-      - 8080:8080
+      - ${BACKEND_PORT}:${BACKEND_PORT}
+
+  postgres:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+    restart: always
+    ports:
+      - 5432:5432
 
 volumes:
   front_node_modules:
