@@ -4,6 +4,8 @@
 
 	export let books: Book[];
 
+	console.log(books);
+
 	let display_type: 'card' | 'table' = 'table';
 </script>
 
