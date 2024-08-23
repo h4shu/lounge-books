@@ -21,13 +21,17 @@ func NewDeletedAtFromStr(s string) (*DeletedAt, error) {
 	return &DeletedAt{&t}, nil
 }
 
-func (p *DeletedAt) Time() *time.Time {
-	return p.t
+func (d *DeletedAt) Time() *time.Time {
+	return d.t
 }
 
-func (p *DeletedAt) String() string {
-	if p.t == nil {
+func (d *DeletedAt) String() string {
+	if d.t == nil {
 		return ""
 	}
-	return time.Time(*p.t).Format(time.RFC3339)
+	return time.Time(*d.t).Format(time.RFC3339)
+}
+
+func (d *DeletedAt) IsNull() bool {
+	return d.t == nil
 }

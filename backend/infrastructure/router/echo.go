@@ -45,6 +45,7 @@ func (e *echoEngine) setAppHandlers(router *echo.Echo) {
 	router.POST("/books", e.buildCreateBookHandler())
 	router.GET("/books", e.buildListBookHandler())
 	router.GET("/books/:id", e.buildGetBookHandler())
+	router.DELETE("/books/:id", e.buildDeleteBookHandler())
 }
 
 func (e *echoEngine) buildCreateBookHandler() echo.HandlerFunc {
@@ -84,6 +85,20 @@ func (e *echoEngine) buildGetBookHandler() echo.HandlerFunc {
 		u := interactors.NewGetBookInteractor(g, e.ctxTimeout)
 		p := presenters.NewGetBookPresenter()
 		ctl := controllers.NewGetBookController(u, p)
+		ctl.Handle(c.Response(), c.Request())
+		return nil
+	}
+}
+
+func (e *echoEngine) buildDeleteBookHandler() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		g, err := gateways.NewBookPostgres(e.db)
+		if err != nil {
+			return err
+		}
+		u := interactors.NewDeleteBookInteractor(g, e.ctxTimeout)
+		p := presenters.NewDeleteBookPresenter()
+		ctl := controllers.NewDeleteBookController(u, p)
 		ctl.Handle(c.Response(), c.Request())
 		return nil
 	}

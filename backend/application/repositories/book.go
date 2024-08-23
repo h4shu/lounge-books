@@ -12,4 +12,5 @@ type BookRepository interface {
 	FindAll(context.Context) ([]entities.Book, error)
 	FindByID(context.Context, *valueobjects.BookID) (*entities.Book, error)
 	FindByTitleContaining(ctx context.Context, bookTitle string) ([]entities.Book, error)
+	Update(context.Context, *entities.Book) error
 }

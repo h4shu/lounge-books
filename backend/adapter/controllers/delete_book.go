@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"encoding/json"
 	"errors"
 	"log"
 	"net/http"
@@ -16,23 +15,23 @@ import (
 )
 
 type (
-	GetBookController interface {
+	DeleteBookController interface {
 		Handle(w http.ResponseWriter, r *http.Request)
 	}
-	getBookControllerImpl struct {
-		usecase   usecases.GetBookUsecase
-		presenter presenters.GetBookPresenter
+	deleteBookControllerImpl struct {
+		usecase   usecases.DeleteBookUsecase
+		presenter presenters.DeleteBookPresenter
 	}
 )
 
-func NewGetBookController(u usecases.GetBookUsecase, p presenters.GetBookPresenter) GetBookController {
-	return &getBookControllerImpl{
+func NewDeleteBookController(u usecases.DeleteBookUsecase, p presenters.DeleteBookPresenter) DeleteBookController {
+	return &deleteBookControllerImpl{
 		usecase:   u,
 		presenter: p,
 	}
 }
 
-func (c *getBookControllerImpl) Handle(w http.ResponseWriter, r *http.Request) {
+func (c *deleteBookControllerImpl) Handle(w http.ResponseWriter, r *http.Request) {
 	p := strings.Split(r.URL.Path, "/")
 	if len(p) == 0 {
 		w.WriteHeader(http.StatusBadRequest)
@@ -40,17 +39,17 @@ func (c *getBookControllerImpl) Handle(w http.ResponseWriter, r *http.Request) {
 	}
 	id, err := strconv.Atoi(p[len(p)-1])
 	if err != nil {
-		log.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
+		log.Println(err)
 		return
 	}
 
-	i := &inputs.GetBookInput{
+	i := &inputs.DeleteBookInput{
 		ID: valueobjects.NewBookID(id),
 	}
-	o, err := c.usecase.Execute(r.Context(), i)
+	_, err = c.usecase.Execute(r.Context(), i)
 	if err != nil {
-		if errors.Is(err, entities.ErrBookNotFound) {
+		if errors.Is(err, entities.ErrBookNotFound) || errors.Is(err, entities.ErrBookAlreadyDeleted) {
 			w.WriteHeader(http.StatusNotFound)
 		} else {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -58,11 +57,5 @@ func (c *getBookControllerImpl) Handle(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
-
-	res := c.presenter.Output(o)
-	err = json.NewEncoder(w).Encode(res)
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(http.StatusInternalServerError)
-	}
+	w.WriteHeader(http.StatusNoContent)
 }

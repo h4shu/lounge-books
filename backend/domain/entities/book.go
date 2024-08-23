@@ -1,6 +1,8 @@
 package entities
 
 import (
+	"errors"
+
 	"github.com/h4shu/lounge-books/domain/valueobjects"
 )
 
@@ -17,6 +19,11 @@ type (
 		pageCount   int
 		deletedAt   *valueobjects.DeletedAt
 	}
+)
+
+var (
+	ErrBookNotFound       = errors.New("book not found")
+	ErrBookAlreadyDeleted = errors.New("book already deleted")
 )
 
 func NewBook(

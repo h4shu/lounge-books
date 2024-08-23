@@ -110,7 +110,7 @@ func (p *BookPostgres) FindByID(ctx context.Context, bookId *valueobjects.BookID
 	)
 	err = stmt.QueryRowContext(ctx, bookId.Int()).Scan(&id, &isbn, &title, &description, &coverLink, &publishedYear, &publishedMonth, &publishedDay, &author, &publisher, &pageCount, &deletedAt)
 	if err == sql.ErrNoRows {
-		return nil, nil
+		return nil, entities.ErrBookNotFound
 	} else if err != nil {
 		return nil, err
 	}
@@ -181,4 +181,15 @@ func (p *BookPostgres) FindByTitleContaining(ctx context.Context, bookTitle stri
 		books = append(books, *book)
 	}
 	return books, nil
+}
+
+func (p *BookPostgres) Update(ctx context.Context, book *entities.Book) error {
+	query := "UPDATE books SET isbn = $1, title = $2, description = $3, cover_link = $4, published_year = $5, published_month = $6, published_day = $7, author = $8, publisher = $9, page_count = $10, deleted_at = $11 WHERE id = $12"
+	stmt, err := p.db.PrepareContext(ctx, query)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	return stmt.ExecContext(ctx, book.ISBN().String(), book.Title(), book.Description(), book.CoverLink(), book.PublishedAt().Year().Int(), book.PublishedAt().Month().Int(), book.PublishedAt().Day().Int(), book.Author().String(), book.Publisher(), book.PageCount(), book.DeletedAt().String(), book.ID().Int())
 }
