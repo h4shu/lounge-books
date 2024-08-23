@@ -25,7 +25,7 @@ export const actions = {
 			body: JSON.stringify(postData)
 		});
 
-		if (res.status === 200) {
+		if (res.status === 204) {
 			return {
 				status: 'success'
 			};
