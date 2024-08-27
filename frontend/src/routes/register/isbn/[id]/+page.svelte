@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { parseNumber } from '$lib/utils';
 	/** @type {import('./$types').PageData} */
-	import type { PageData } from './$types';
+	import type { ActionData, PageData } from './$types';
 
 	export let data: PageData;
+	export let form: ActionData;
 </script>
 
 <div>
@@ -60,7 +61,16 @@
 					<input name="page_count" type="number" value={data.book_info?.page_count} />
 				</div>
 			</fieldset>
+			<img src={data.book_info?.cover_link} alt="表紙" />
 			<button type="submit">登録</button>
+			{#if form?.status === 'success'}
+				<p>
+					登録しました。
+					<a href="/register">別の本を登録する</a>
+				</p>
+			{:else if form?.status === 'error'}
+				<p>登録に失敗しました。</p>
+			{/if}
 		</form>
 	{:else}
 		<p>データの取得に失敗しました。</p>
