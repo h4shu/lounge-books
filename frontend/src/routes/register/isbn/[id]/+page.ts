@@ -14,7 +14,8 @@ export async function load({ params }) {
 				isbn: book.summary.isbn,
 				title: book.summary.title,
 				description: book.onix.CollateralDetail?.TextContent?.[0]?.Text,
-				cover_link: `https://cover.openbd.jp/${book.onix.ProductIdentifier?.IDValue}.jpg`,
+				cover_link:
+					book.onix.CollateralDetail?.SupportingResource?.[0]?.ResourceVersion?.[0]?.ResourceLink,
 				published_at: book.summary.pubdate,
 				author: book.summary.author,
 				publisher: book.summary.publisher,
