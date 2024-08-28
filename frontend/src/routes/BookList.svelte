@@ -97,7 +97,8 @@
 	.grid_list {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-		gap: 1rem;
+		padding: 0 1rem;
+		gap: 0.5rem;
 	}
 	.table_list {
 		display: table;

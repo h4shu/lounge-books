@@ -23,5 +23,10 @@
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
+		transition: all 0.3s;
+
+		&:hover {
+			background-color: var(--color-secondary);
+		}
 	}
 </style>

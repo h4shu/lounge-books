@@ -1,6 +1,8 @@
 <script lang="ts">
+	import { deserialize } from '$app/forms';
 	import { page } from '$app/stores';
 	import { parseNumber } from '$lib/utils';
+	import Icon from '@iconify/svelte';
 	/** @type {import('./$types').PageData} */
 	import type { ActionData, PageData } from './$types';
 
@@ -8,7 +10,7 @@
 	export let form: ActionData;
 </script>
 
-<div>
+<div class="register_page">
 	<h2>本を登録</h2>
 	{#if form?.status === 'success'}
 		<p>
@@ -42,6 +44,12 @@
 			<legend>著者</legend>
 			<div>
 				<input name="author" type="text" value={data.book_info?.author} />
+			</div>
+		</fieldset>
+		<fieldset>
+			<legend>説明文</legend>
+			<div>
+				<textarea name="genre">{data.book_info?.description}</textarea>
 			</div>
 		</fieldset>
 		<fieldset>
@@ -81,8 +89,44 @@
 			<div>
 				<input name="cover_link" type="text" value={data.book_info?.cover_link} />
 			</div>
-			<img src={data.book_info?.cover_link} alt="表紙" />
+			{#if data.book_info?.cover_link}
+				<img src={data.book_info?.cover_link} alt="表紙" />
+			{/if}
 		</fieldset>
-		<button type="submit">登録</button>
+		<button type="submit">
+			<Icon icon="tabler:circle-plus" width="1.5rem" />
+			登録
+		</button>
 	</form>
 </div>
+
+<style scoped>
+	.register_page {
+		margin: 0 1rem;
+		font-size: 1rem;
+	}
+	form {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	button {
+		background-color: var(--color-primary);
+		color: white;
+		border: none;
+		border-radius: 0.5rem;
+		font-size: 1rem;
+		padding: 0.5rem 1rem;
+		cursor: pointer;
+		transition: all 0.3s;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+
+		&:hover {
+			background-color: var(--color-secondary);
+		}
+	}
+</style>

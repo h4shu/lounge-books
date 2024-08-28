@@ -1,7 +1,6 @@
 <script>
 	import Header from './Header.svelte';
 	import '../app.css';
-	import Fab from './FAB.svelte';
 </script>
 
 <div class="app">
@@ -40,13 +39,7 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		padding: 2rem;
+		padding: 1.5rem;
 		margin-top: 3rem;
-	}
-
-	@media (min-width: 480px) {
-		footer {
-			padding: 1rem 0;
-		}
 	}
 </style>
