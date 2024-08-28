@@ -29,20 +29,24 @@
 		{/each}
 	</div>
 {:else}
-	<table class="table_list">
-		<tbody>
-			<tr>
-				<th>タイトル</th>
-				<th>著者</th>
-				<th>出版社</th>
-				<th>出版日</th>
-				<th>ページ数</th>
-			</tr>
-			{#each books as book}
-				<BookCard {book} display_type="table" />
-			{/each}
-		</tbody>
-	</table>
+	<div class="table_wrapper">
+		<table class="table_list">
+			<thead>
+				<tr>
+					<th>タイトル</th>
+					<th>著者</th>
+					<th>出版社</th>
+					<th>出版日</th>
+					<th>ページ数</th>
+				</tr>
+			</thead>
+			<tbody>
+				{#each books as book}
+					<BookCard {book} display_type="table" />
+				{/each}
+			</tbody>
+		</table>
+	</div>
 {/if}
 
 <style>
@@ -77,12 +81,10 @@
 		select {
 			/* 初期化 */
 			appearance: none;
-			-moz-appearance: none;
-			-webkit-appearance: none;
 			background: none;
 			border: none;
 			color: #333;
-			font-size: 16px;
+			font-size: 1rem;
 			width: 100%;
 			height: 100%;
 			padding: 0 10px;
@@ -98,10 +100,14 @@
 		display: table;
 		width: 100%;
 
-		th {
+		thead th {
 			background-color: var(--color-primary);
 			color: white;
 			font-weight: bold;
+			position: -webkit-sticky;
+			position: sticky;
+			top: 4rem;
+			z-index: 10;
 		}
 	}
 </style>
