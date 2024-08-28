@@ -61,7 +61,13 @@
 					<input name="page_count" type="number" value={data.book_info?.page_count} />
 				</div>
 			</fieldset>
-			<img src={data.book_info?.cover_link} alt="表紙" />
+			<fieldset>
+				<legend>画像URL</legend>
+				<div>
+					<input name="cover_link" type="text" value={data.book_info?.cover_link} />
+				</div>
+				<img src={data.book_info?.cover_link} alt="表紙" />
+			</fieldset>
 			<button type="submit">登録</button>
 			{#if form?.status === 'success'}
 				<p>
