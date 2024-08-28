@@ -2,13 +2,13 @@
 	import Scanner from './Scanner.svelte';
 </script>
 
-<div>
+<div class="scan_page">
 	<h2>ISBNコードをスキャンする</h2>
 	<Scanner />
 </div>
 
 <style scoped>
-	h2 {
+	.scan_page {
 		margin: 1rem;
 	}
 </style>

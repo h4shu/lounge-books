@@ -44,4 +44,14 @@
 {#if showScanner}
 	<!-- svelte-ignore a11y_media_has_caption -->
 	<video style="width: 100%;" bind:this={videoRef}></video>
+	<p>"978"から始まるバーコードをスキャンしてください。</p>
 {/if}
+
+<style scoped>
+	video {
+		border-radius: 1rem;
+	}
+	p {
+		text-align: center;
+	}
+</style>
