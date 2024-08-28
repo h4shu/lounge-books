@@ -16,7 +16,7 @@
 			console.log('Scanning...');
 			controls = await codeReader.decodeFromVideoDevice(undefined, videoRef, (result, error) => {
 				if (result && result.getText().startsWith('97')) {
-					goto(`/register/isbn/${result.getText()}`);
+					goto(`/register/${result.getText()}`);
 				}
 			});
 		};
