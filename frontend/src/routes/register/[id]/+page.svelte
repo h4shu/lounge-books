@@ -9,6 +9,14 @@
 
 <div>
 	<h2>本を登録</h2>
+	{#if form?.status === 'success'}
+		<p>
+			登録しました。
+			<a href="/register">別の本を登録する</a>
+		</p>
+	{:else if form?.status === 'error'}
+		<p>登録に失敗しました。</p>
+	{/if}
 	<form method="post">
 		<fieldset>
 			<legend>ISBN</legend>
@@ -72,13 +80,5 @@
 			<img src={data.book_info?.cover_link} alt="表紙" />
 		</fieldset>
 		<button type="submit">登録</button>
-		{#if form?.status === 'success'}
-			<p>
-				登録しました。
-				<a href="/register">別の本を登録する</a>
-			</p>
-		{:else if form?.status === 'error'}
-			<p>登録に失敗しました。</p>
-		{/if}
 	</form>
 </div>
