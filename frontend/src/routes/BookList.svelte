@@ -48,18 +48,21 @@
 		</table>
 	</div>
 {/if}
+{#if books.length === 0}
+	<p class="not_founded">書籍が見つかりませんでした。</p>
+{/if}
 
 <style>
 	.books_menu {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		margin-bottom: 1rem;
+		margin: 1rem;
 
 		.display_type {
-			background: var(--color-tertiary);
+			border: 1px solid var(--color-border);
 			height: 40px;
-			width: 300px;
+			width: 150px;
 			border-radius: 5px;
 			position: relative;
 			z-index: 1;
@@ -81,7 +84,7 @@
 		select {
 			/* 初期化 */
 			appearance: none;
-			background: none;
+			background-color: transparent;
 			border: none;
 			color: #333;
 			font-size: 1rem;
@@ -109,5 +112,8 @@
 			top: 4rem;
 			z-index: 10;
 		}
+	}
+	.not_founded {
+		text-align: center;
 	}
 </style>
