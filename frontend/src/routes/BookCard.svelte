@@ -38,6 +38,10 @@
 		margin: 8px;
 	}
 
+	img {
+		width: 100%;
+	}
+
 	td {
 		border-bottom: 1px solid #ccc;
 		padding: 8px;
