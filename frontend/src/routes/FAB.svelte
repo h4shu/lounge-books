@@ -2,7 +2,7 @@
 	import Icon from '@iconify/svelte';
 </script>
 
-<a href="/register" class="floating_button">
+<a href="/register/new" class="floating_button">
 	<Icon icon="tabler:circle-plus" width="1.5rem" />
 	本を登録する
 </a>

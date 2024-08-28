@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import { parseNumber } from '$lib/utils';
 	/** @type {import('./$types').PageData} */
 	import type { ActionData, PageData } from './$types';
@@ -27,6 +28,9 @@
 					value={data.book_info?.isbn === 'new' ? '' : data.book_info?.isbn}
 				/>
 			</div>
+			{#if $page.params.id === 'new'}
+				<a href="/register">ISBNコードをスキャンする</a>
+			{/if}
 		</fieldset>
 		<fieldset>
 			<legend>タイトル</legend>

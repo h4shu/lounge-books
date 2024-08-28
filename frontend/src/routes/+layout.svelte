@@ -14,8 +14,6 @@
 	<footer>
 		<p>2024 - CA Tech Lounge</p>
 	</footer>
-
-	<Fab />
 </div>
 
 <style>
