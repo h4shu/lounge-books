@@ -29,7 +29,6 @@
 		flex: 1;
 		display: flex;
 		flex-direction: column;
-		padding: 1rem;
 		width: 100%;
 		max-width: 64rem;
 		margin: 0 auto;
@@ -37,16 +36,19 @@
 	}
 
 	footer {
+		background-color: var(--color-primary);
+		color: white;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		padding: 12px;
+		padding: 2rem;
+		margin-top: 3rem;
 	}
 
 	@media (min-width: 480px) {
 		footer {
-			padding: 12px 0;
+			padding: 1rem 0;
 		}
 	}
 </style>
