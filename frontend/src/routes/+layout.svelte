@@ -1,6 +1,7 @@
 <script>
 	import Header from './Header.svelte';
 	import '../app.css';
+	import Fab from './FAB.svelte';
 </script>
 
 <div class="app">
@@ -13,6 +14,8 @@
 	<footer>
 		<p>2024 - CA Tech Lounge</p>
 	</footer>
+
+	<Fab />
 </div>
 
 <style>
