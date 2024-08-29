@@ -17,6 +17,7 @@ type (
 		author      *valueobjects.Author
 		publisher   string
 		pageCount   int
+		tags        []Tag
 		deletedAt   *valueobjects.DeletedAt
 	}
 )
@@ -36,6 +37,7 @@ func NewBook(
 	author *valueobjects.Author,
 	publisher string,
 	pageCount int,
+	tags []Tag,
 	deletedAt *valueobjects.DeletedAt,
 ) *Book {
 	return &Book{
@@ -48,6 +50,7 @@ func NewBook(
 		author:      author,
 		publisher:   publisher,
 		pageCount:   pageCount,
+		tags:        tags,
 		deletedAt:   deletedAt,
 	}
 }
@@ -86,6 +89,10 @@ func (b *Book) Publisher() string {
 
 func (b *Book) PageCount() int {
 	return b.pageCount
+}
+
+func (b *Book) Tags() []Tag {
+	return b.tags
 }
 
 func (b *Book) DeletedAt() *valueobjects.DeletedAt {

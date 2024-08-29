@@ -1,9 +1,10 @@
 package inputs
 
-import "github.com/h4shu/lounge-books/domain/valueobjects"
+import (
+	"github.com/h4shu/lounge-books/domain/valueobjects"
+)
 
 type CreateBookInput struct {
-	ID          *valueobjects.BookID
 	ISBN        *valueobjects.ISBN
 	Title       string
 	Description string
@@ -12,4 +13,5 @@ type CreateBookInput struct {
 	Author      *valueobjects.Author
 	Publisher   string
 	PageCount   int
+	TagIDs      []int
 }

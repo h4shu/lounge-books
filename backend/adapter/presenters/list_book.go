@@ -8,18 +8,19 @@ type (
 	}
 	listBookPresenterImpl struct{}
 	bookResponse          struct {
-		ID             int    `json:"id"`
-		ISBN           string `json:"isbn"`
-		Title          string `json:"title"`
-		Description    string `json:"description"`
-		CoverLink      string `json:"cover_link"`
-		PublishedYear  *int   `json:"published_year"`
-		PublishedMonth *int   `json:"published_month"`
-		PublishedDay   *int   `json:"published_day"`
-		Author         string `json:"author"`
-		Publisher      string `json:"publisher"`
-		PageCount      int    `json:"page_count"`
-		DeletedAt      string `json:"deleted_at"`
+		ID             int      `json:"id"`
+		ISBN           string   `json:"isbn"`
+		Title          string   `json:"title"`
+		Description    string   `json:"description"`
+		CoverLink      string   `json:"cover_link"`
+		PublishedYear  *int     `json:"published_year"`
+		PublishedMonth *int     `json:"published_month"`
+		PublishedDay   *int     `json:"published_day"`
+		Author         string   `json:"author"`
+		Publisher      string   `json:"publisher"`
+		PageCount      int      `json:"page_count"`
+		TagNames       []string `json:"tag_names"`
+		DeletedAt      string   `json:"deleted_at"`
 	}
 	listBookResponse struct {
 		Books []bookResponse `json:"books"`
@@ -34,6 +35,10 @@ func (p *listBookPresenterImpl) Output(o *outputs.ListBookOutput) *listBookRespo
 	var res listBookResponse
 	res.Books = []bookResponse{}
 	for _, b := range o.Books {
+		tagNames := []string{}
+		for _, t := range b.Tags() {
+			tagNames = append(tagNames, t.Name())
+		}
 		book := bookResponse{
 			ID:             b.ID().Int(),
 			ISBN:           b.ISBN().String(),
@@ -46,6 +51,7 @@ func (p *listBookPresenterImpl) Output(o *outputs.ListBookOutput) *listBookRespo
 			Author:         b.Author().String(),
 			Publisher:      b.Publisher(),
 			PageCount:      b.PageCount(),
+			TagNames:       tagNames,
 			DeletedAt:      b.DeletedAt().String(),
 		}
 		res.Books = append(res.Books, book)

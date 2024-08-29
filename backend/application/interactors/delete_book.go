@@ -47,6 +47,7 @@ func (i *DeleteBookInteractor) Execute(ctx context.Context, input *inputs.Delete
 		book.Author(),
 		book.Publisher(),
 		book.PageCount(),
+		book.Tags(),
 		valueobjects.NewDeletedAt(&t),
 	)
 	err = i.repository.Update(ctx, updated)

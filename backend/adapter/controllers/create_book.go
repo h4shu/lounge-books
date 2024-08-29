@@ -29,6 +29,7 @@ type (
 		PublishedDay   int    `json:"published_day"`
 		Author         string `json:"author"`
 		Publisher      string `json:"publisher"`
+		TagIDs         []int  `json:"tag_ids"`
 		PageCount      int    `json:"page_count"`
 	}
 )
@@ -65,6 +66,7 @@ func (c *createBookControllerImpl) Handle(w http.ResponseWriter, r *http.Request
 		Author:      valueobjects.NewAuthor(req.Author),
 		Publisher:   req.Publisher,
 		PageCount:   req.PageCount,
+		TagIDs:      req.TagIDs,
 	}
 	_, err = c.usecase.Execute(r.Context(), i)
 	if err != nil {

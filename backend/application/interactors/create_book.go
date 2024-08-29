@@ -8,7 +8,6 @@ import (
 	"github.com/h4shu/lounge-books/application/outputs"
 	"github.com/h4shu/lounge-books/application/repositories"
 	"github.com/h4shu/lounge-books/application/usecases"
-	"github.com/h4shu/lounge-books/domain/entities"
 )
 
 type CreateBookInteractor struct {
@@ -27,19 +26,7 @@ func (i *CreateBookInteractor) Execute(ctx context.Context, input *inputs.Create
 	ctx, cancel := context.WithTimeout(ctx, i.ctxTimeout)
 	defer cancel()
 
-	book := entities.NewBook(
-		input.ID,
-		input.ISBN,
-		input.Title,
-		input.Description,
-		input.CoverLink,
-		input.PublishedAt,
-		input.Author,
-		input.Publisher,
-		input.PageCount,
-		nil,
-	)
-	err := i.repository.Create(ctx, book)
+	err := i.repository.Create(ctx, input)
 	if err != nil {
 		return nil, err
 	}
