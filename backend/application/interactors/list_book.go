@@ -29,10 +29,10 @@ func (i *ListBookInteractor) Execute(ctx context.Context, input *inputs.ListBook
 
 	var books []entities.Book
 	var err error
-	if len(input.SearchTitle) == 0 {
+	if len(input.SearchKeyword) == 0 {
 		books, err = i.repository.FindAll(ctx)
 	} else {
-		books, err = i.repository.FindByTitleContaining(ctx, input.SearchTitle)
+		books, err = i.repository.FindByKeywordContaining(ctx, input.SearchKeyword)
 	}
 	if err != nil {
 		return nil, err

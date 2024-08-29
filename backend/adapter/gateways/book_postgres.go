@@ -130,15 +130,15 @@ func (p *BookPostgres) FindByID(ctx context.Context, bookId *valueobjects.BookID
 	return entities.NewBook(valueobjects.NewBookID(id), valueobjects.NewISBN(isbn), title, description, coverLink, publishedAt, valueobjects.NewAuthor(author), publisher, pageCount, deletedAtVal), nil
 }
 
-func (p *BookPostgres) FindByTitleContaining(ctx context.Context, bookTitle string) ([]entities.Book, error) {
-	query := "SELECT id, isbn, title, description, cover_link, published_year, published_month, published_day, author, publisher, page_count, deleted_at FROM books WHERE title LIKE '%' || $1 || '%'"
+func (p *BookPostgres) FindByKeywordContaining(ctx context.Context, keyword string) ([]entities.Book, error) {
+	query := "SELECT id, isbn, title, description, cover_link, published_year, published_month, published_day, author, publisher, page_count, deleted_at FROM books WHERE isbn LIKE '%' || $1 || '%' OR lower(title) LIKE lower('%' || $1 || '%') OR lower(author) LIKE lower('%' || $1 || '%') OR lower(publisher) LIKE lower('%' || $1 || '%')"
 	stmt, err := p.db.PrepareContext(ctx, query)
 	if err != nil {
 		return nil, err
 	}
 	defer stmt.Close()
 
-	rows, err := stmt.QueryContext(ctx, bookTitle)
+	rows, err := stmt.QueryContext(ctx, keyword)
 	if err != nil {
 		return nil, err
 	}
