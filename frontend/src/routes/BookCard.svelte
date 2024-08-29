@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Book } from '$lib/types/book';
+	import { parseDate } from '$lib/utils';
 
 	export let book: Book;
 
@@ -22,7 +23,7 @@
 			{book.publisher}
 		</td>
 		<td>
-			{book.published_at}
+			{parseDate(book.published_year, book.published_month, book.published_day)}
 		</td>
 		<td>
 			{book.page_count}
@@ -36,6 +37,10 @@
 		border-radius: 4px;
 		padding: 8px;
 		margin: 8px;
+	}
+
+	img {
+		width: 100%;
 	}
 
 	td {

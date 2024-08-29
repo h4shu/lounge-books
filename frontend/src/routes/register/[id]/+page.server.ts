@@ -18,14 +18,13 @@ export const actions = {
 			published_day: parseNumber(data.get('published_day') as string),
 			page_count: parseInt(data.get('page_count')?.toString() || '0', 10)
 		};
-		console.log(postData);
 
 		const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/books`, {
 			method: 'POST',
 			body: JSON.stringify(postData)
 		});
 
-		if (res.status === 200) {
+		if (res.status === 204) {
 			return {
 				status: 'success'
 			};
