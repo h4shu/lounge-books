@@ -12,9 +12,12 @@ import (
 	_ "github.com/lib/pq"
 )
 
-type BookPostgres struct {
-	db repositories.SQL
-}
+type (
+	BookPostgres struct {
+		db repositories.SQL
+	}
+	bookTags map[int][]entities.Tag
+)
 
 //go:embed schema/book_postgres.sql
 var schemaBookPostgres string
@@ -68,6 +71,11 @@ func (p *BookPostgres) FindAll(ctx context.Context) ([]entities.Book, error) {
 	}
 	defer rows.Close()
 
+	bookTags, err := p.getBookTags(ctx)
+	if err != nil {
+		return nil, err
+	}
+
 	var books []entities.Book
 	for rows.Next() {
 		var (
@@ -101,13 +109,7 @@ func (p *BookPostgres) FindAll(ctx context.Context) ([]entities.Book, error) {
 			deletedAtVal = valueobjects.NewDeletedAt(nil)
 		}
 
-		bookId := valueobjects.NewBookID(id)
-		tags, err := p.FindTagsByBookID(ctx, bookId)
-		if err != nil {
-			return nil, err
-		}
-
-		book := entities.NewBook(bookId, valueobjects.NewISBN(isbn), title, description, coverLink, publishedAt, valueobjects.NewAuthor(author), publisher, pageCount, tags, deletedAtVal)
+		book := entities.NewBook(valueobjects.NewBookID(id), valueobjects.NewISBN(isbn), title, description, coverLink, publishedAt, valueobjects.NewAuthor(author), publisher, pageCount, bookTags[id], deletedAtVal)
 		books = append(books, *book)
 	}
 	return books, nil
@@ -175,6 +177,11 @@ func (p *BookPostgres) FindByKeywordContaining(ctx context.Context, keyword stri
 	}
 	defer rows.Close()
 
+	bookTags, err := p.getBookTags(ctx)
+	if err != nil {
+		return nil, err
+	}
+
 	var books []entities.Book
 	for rows.Next() {
 		var (
@@ -208,13 +215,7 @@ func (p *BookPostgres) FindByKeywordContaining(ctx context.Context, keyword stri
 			deletedAtVal = valueobjects.NewDeletedAt(nil)
 		}
 
-		bookId := valueobjects.NewBookID(id)
-		tags, err := p.FindTagsByBookID(ctx, bookId)
-		if err != nil {
-			return nil, err
-		}
-
-		book := entities.NewBook(bookId, valueobjects.NewISBN(isbn), title, description, coverLink, publishedAt, valueobjects.NewAuthor(author), publisher, pageCount, tags, deletedAtVal)
+		book := entities.NewBook(valueobjects.NewBookID(id), valueobjects.NewISBN(isbn), title, description, coverLink, publishedAt, valueobjects.NewAuthor(author), publisher, pageCount, bookTags[id], deletedAtVal)
 		books = append(books, *book)
 	}
 	return books, nil
@@ -241,6 +242,30 @@ func (p *BookPostgres) FindTagsByBookID(ctx context.Context, bookId *valueobject
 		tags = append(tags, *tag)
 	}
 	return tags, nil
+}
+
+func (p *BookPostgres) getBookTags(ctx context.Context) (bookTags, error) {
+	query := "SELECT book_id, tag_id, tags.name AS tag_name FROM book_tagging INNER JOIN tags ON book_tagging.tag_id = tags.id"
+	rows, err := p.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	ret := make(bookTags)
+	for rows.Next() {
+		var (
+			bookId  int
+			tagId   int
+			tagName string
+		)
+		err := rows.Scan(&bookId, &tagId, &tagName)
+		if err != nil {
+			return nil, err
+		}
+		tag := entities.NewTag(tagId, tagName)
+		ret[bookId] = append(ret[bookId], *tag)
+	}
+	return ret, nil
 }
 
 func (p *BookPostgres) Update(ctx context.Context, book *entities.Book) error {
