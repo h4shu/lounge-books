@@ -16,10 +16,10 @@ type BookPostgres struct {
 }
 
 //go:embed schema/book_postgres.sql
-var schema string
+var bookPostgresSchema string
 
 func NewBookPostgres(db repositories.SQL) (repositories.BookRepository, error) {
-	err := db.Exec(schema)
+	err := db.Exec(bookPostgresSchema)
 	if err != nil {
 		return nil, err
 	}

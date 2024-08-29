@@ -11,3 +11,7 @@ func NewISBN(s string) *ISBN {
 func (i *ISBN) String() string {
 	return i.s
 }
+
+func (i *ISBN) IsNull() bool {
+	return i.s == ""
+}

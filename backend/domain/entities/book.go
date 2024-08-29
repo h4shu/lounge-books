@@ -12,6 +12,7 @@ type (
 		isbn        *valueobjects.ISBN
 		title       string
 		description string
+		images      []Image
 		coverLink   string
 		publishedAt *valueobjects.PublishedAt
 		author      *valueobjects.Author
