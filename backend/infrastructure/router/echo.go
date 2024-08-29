@@ -46,6 +46,10 @@ func (e *echoEngine) setAppHandlers(router *echo.Echo) {
 	router.GET("/books", e.buildListBookHandler())
 	router.GET("/books/:id", e.buildGetBookHandler())
 	router.DELETE("/books/:id", e.buildDeleteBookHandler())
+
+	router.POST("/tags", e.buildCreateTagHandler())
+	router.GET("/tags", e.buildListTagHandler())
+	router.GET("/tags/:id", e.buildGetTagHandler())
 }
 
 func (e *echoEngine) buildCreateBookHandler() echo.HandlerFunc {
@@ -99,6 +103,48 @@ func (e *echoEngine) buildDeleteBookHandler() echo.HandlerFunc {
 		u := interactors.NewDeleteBookInteractor(g, e.ctxTimeout)
 		p := presenters.NewDeleteBookPresenter()
 		ctl := controllers.NewDeleteBookController(u, p)
+		ctl.Handle(c.Response(), c.Request())
+		return nil
+	}
+}
+
+func (e *echoEngine) buildCreateTagHandler() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		g, err := gateways.NewTagPostgres(e.db)
+		if err != nil {
+			return err
+		}
+		u := interactors.NewCreateTagInteractor(g, e.ctxTimeout)
+		p := presenters.NewCreateTagPresenter()
+		ctl := controllers.NewCreateTagController(u, p)
+		ctl.Handle(c.Response(), c.Request())
+		return nil
+	}
+}
+
+func (e *echoEngine) buildListTagHandler() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		g, err := gateways.NewTagPostgres(e.db)
+		if err != nil {
+			return err
+		}
+		u := interactors.NewListTagInteractor(g, e.ctxTimeout)
+		p := presenters.NewListTagPresenter()
+		ctl := controllers.NewListTagController(u, p)
+		ctl.Handle(c.Response(), c.Request())
+		return nil
+	}
+}
+
+func (e *echoEngine) buildGetTagHandler() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		g, err := gateways.NewTagPostgres(e.db)
+		if err != nil {
+			return err
+		}
+		u := interactors.NewGetTagInteractor(g, e.ctxTimeout)
+		p := presenters.NewGetTagPresenter()
+		ctl := controllers.NewGetTagController(u, p)
 		ctl.Handle(c.Response(), c.Request())
 		return nil
 	}
